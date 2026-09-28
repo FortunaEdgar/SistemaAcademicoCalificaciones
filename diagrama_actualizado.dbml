@@ -1,0 +1,87 @@
+// Diagrama del esquema actual (2_esquema/create_table.sql). Se puede pegar en https://dbdiagram.io
+
+Table year_academico {
+  id_year serial [pk]
+  year_academico smallint [not null, unique]
+  descripcion varchar(100)
+}
+
+Table grados {
+  id_grado serial [pk]
+  grados varchar(100) [not null, unique]
+}
+
+Table seccion {
+  id_seccion serial [pk]
+  seccion varchar(20) [not null]
+  id_year int [not null, ref: > year_academico.id_year]
+  id_grado int [not null, ref: > grados.id_grado]
+}
+
+Table estudiantes {
+  id_estudiante serial [pk]
+  nombre varchar(150) [not null]
+  fecha_nacimiento date [not null]
+}
+
+Table matriculas {
+  id_matricula serial [pk]
+  id_estudiante int [not null, ref: > estudiantes.id_estudiante]
+  id_seccion int [not null, ref: > seccion.id_seccion]
+}
+
+Table profesores {
+  id_profesor serial [pk]
+  nombre varchar(150) [not null]
+}
+
+Table materias {
+  id_materia serial [pk]
+  materia varchar(100) [not null, unique]
+}
+
+Table horrario {
+  id_horario serial [pk]
+  hora_inicio time [not null]
+  hora_final time [not null]
+  descriccion varchar(150)
+}
+
+Table carga_seccion_materia {
+  id_carga serial [pk]
+  id_profesor int [not null, ref: > profesores.id_profesor]
+  id_materia int [not null, ref: > materias.id_materia]
+  id_seccion int [not null, ref: > seccion.id_seccion]
+  id_horario int [not null, ref: > horrario.id_horario]
+  dia_semana varchar(15) [not null]
+}
+
+Table periodos {
+  id_periodo serial [pk]
+  periodo varchar(50) [not null]
+  numero_periodo int [not null]
+  id_year int [not null, ref: > year_academico.id_year]
+}
+
+Table criterios {
+  id_criterio serial [pk]
+  criterio varchar(100) [not null]
+  porcentaje float [not null]
+}
+
+Table notas_criterios {
+  id_nota_criterio serial [pk]
+  id_matricula int [not null, ref: > matriculas.id_matricula]
+  id_carga int [not null, ref: > carga_seccion_materia.id_carga]
+  id_periodo int [not null, ref: > periodos.id_periodo]
+  id_criterio int [not null, ref: > criterios.id_criterio]
+  valor float [not null]
+}
+
+Table calificaciones_trimestre {
+  id_calificacion_trimestre serial [pk]
+  id_matricula int [not null, ref: > matriculas.id_matricula]
+  id_carga int [not null, ref: > carga_seccion_materia.id_carga]
+  id_periodo int [not null, ref: > periodos.id_periodo]
+  promedio float [not null]
+}

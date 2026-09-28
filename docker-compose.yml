@@ -1,0 +1,35 @@
+# Levanta PostgreSQL 16 con la base de datos ya creada y cargada, y pgAdmin para consultarla.
+# Uso: docker compose up -d
+# Credenciales solo para uso local.
+services:
+  postgres:
+    image: postgres:16
+    container_name: calificaciones_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: calificaciones
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Los scripts se ejecutan en orden alfabético la primera vez que se crea el contenedor
+      - ./2_esquema/create_table.sql:/docker-entrypoint-initdb.d/01_create_table.sql:ro
+      - ./3_procedimiento_trigger_funcion/1_tregger.sql:/docker-entrypoint-initdb.d/02_trigger.sql:ro
+      - ./3_procedimiento_trigger_funcion/2_procedimiento_almacenado.sql:/docker-entrypoint-initdb.d/03_procedimientos.sql:ro
+      - ./3_procedimiento_trigger_funcion/3_funcion.sql:/docker-entrypoint-initdb.d/04_funcion.sql:ro
+      - ./4_datos_de_prueba/insert_db_prueba.sql:/docker-entrypoint-initdb.d/05_datos_prueba.sql:ro
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: calificaciones_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:

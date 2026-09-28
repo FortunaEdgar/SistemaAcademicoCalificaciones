@@ -1,0 +1,160 @@
+
+Table ANIO_ACADEMICO {
+
+  id_anio int [pk]
+
+  descripcion varchar
+
+}
+
+
+
+Table GRADOS {
+
+  id_grado int [pk]
+
+  nombre varchar
+
+}
+
+
+
+Table GRUPOS {
+
+  id_grupo int [pk]
+
+  seccion varchar
+
+  id_anio int [ref: > ANIO_ACADEMICO.id_anio]
+
+  id_grado int [ref: > GRADOS.id_grado]
+
+}
+
+
+
+Table ESTUDIANTES {
+
+  id_estudiante int [pk]
+
+  nombre varchar
+
+  fecha_nacimiento date
+
+}
+
+
+
+Table MATRICULAS {
+
+  id_matricula int [pk]
+
+  id_estudiante int [ref: > ESTUDIANTES.id_estudiante]
+
+  id_grupo int [ref: > GRUPOS.id_grupo]
+
+}
+
+
+
+Table PROFESORES {
+
+  id_profesor int [pk]
+
+  nombre varchar
+
+}
+
+
+
+Table MATERIAS {
+
+  id_materia int [pk]
+
+  nombre varchar
+
+}
+
+
+Table CARGA_ACADEMICA {
+
+  id_carga int [pk]
+
+  id_profesor int [ref: > PROFESORES.id_profesor]
+
+  id_materia int [ref: > MATERIAS.id_materia]
+
+  id_grupo int [ref: > GRUPOS.id_grupo]
+  id_horario int [ref: > HORRARIO.id_horario]
+
+}
+
+Table HORRARIO {
+  id_horario int [pk]
+  horaint time
+  descriccion varchar
+
+
+}
+
+
+
+
+
+
+
+Table PERIODOS {
+
+  id_periodo int [pk]
+
+  nombre varchar 
+  numero int 
+
+  id_anio int [ref: > ANIO_ACADEMICO.id_anio]
+
+}
+
+
+
+Table CRITERIOS {
+
+  id_criterio int [pk]
+
+  nombre varchar 
+  porcentaje float 
+}
+
+
+
+Table NOTAS_CRITERIOS {
+
+  id_nota_criterio int [pk]
+
+  id_matricula int [ref: > MATRICULAS.id_matricula]
+
+  id_carga int [ref: > CARGA_ACADEMICA.id_carga]
+
+  id_periodo int [ref: > PERIODOS.id_periodo]
+
+  id_criterio int [ref: > CRITERIOS.id_criterio]
+
+  valor float 
+
+}
+
+
+
+Table CALIFICACIONES_TRIMESTRE {
+
+  id_calificacion_trimestre int [pk]
+
+  id_matricula int [ref: > MATRICULAS.id_matricula]
+
+  id_carga int [ref: > CARGA_ACADEMICA.id_carga]
+
+  id_periodo int [ref: > PERIODOS.id_periodo]
+
+  promedio float 
+
+}
+
